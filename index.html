@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>STRIDE — Tênis Puma</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<style>
+:root {
+  --black: #0a0a0a;
+  --white: #f5f5f0;
+  --cream: #ede9e0;
+  --red:   #e8002d;
+  --red2:  #ff1a42;
+  --gray:  #888;
+  --dark:  #141414;
+  --card:  #1a1a1a;
+}
+*,*::before,*::after { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+body { font-family:'DM Sans',sans-serif; background:var(--black); color:var(--white); overflow-x:hidden; cursor:none; }
+a { text-decoration:none; color:inherit; }
+ul { list-style:none; }
+img { display:block; max-width:100%; }
+
+/* CURSOR */
+.cursor { position:fixed; width:10px; height:10px; background:var(--red); border-radius:50%; pointer-events:none; z-index:9999; transform:translate(-50%,-50%); transition:transform .1s; }
+.cursor-ring { position:fixed; width:36px; height:36px; border:1.5px solid rgba(232,0,45,.4); border-radius:50%; pointer-events:none; z-index:9998; transform:translate(-50%,-50%); transition:all .18s ease; }
+body:hover .cursor-ring { opacity:1; }
+
+/* SCROLLBAR */
+::-webkit-scrollbar { width:3px; }
+::-webkit-scrollbar-thumb { background:var(--red); }
+
+/* ── HEADER ── */
+header {
+  position:fixed; top:0; left:0; right:0; z-index:500;
+  height:68px; padding:0 60px;
+  display:flex; align-items:center; justify-content:space-between;
+  background:rgba(10,10,10,.92); backdrop-filter:blur(20px);
+  border-bottom:1px solid rgba(255,255,255,.06);
+}
+.logo {
+  font-family:'Bebas Neue',sans-serif;
+  font-size:26px; letter-spacing:6px;
+  color:var(--white);
+}
+.logo span { color:var(--red); }
+nav { display:flex; align-items:center; gap:36px; }
+nav a { font-size:11px; font-weight:500; letter-spacing:3px; text-transform:uppercase; color:var(--gray); transition:color .2s; }
+nav a:hover { color:var(--white); }
+.cart-btn {
+  display:flex; align-items:center; gap:8px;
+  padding:10px 24px; background:var(--red);
+  font-size:11px; font-weight:600; letter-spacing:3px; text-transform:uppercase;
+  border:none; cursor:none; color:#fff;
+  clip-path:polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,8px 100%,0 calc(100% - 8px));
+  transition:filter .2s;
+}
+.cart-btn:hover { filter:brightness(1.2); }
+
+/* ── HERO ── */
+.hero {
+  min-height:100vh; padding-top:68px;
+  display:grid; grid-template-columns:1fr 1fr;
+  position:relative; overflow:hidden;
+}
+.hero-left {
+  display:flex; flex-direction:column; justify-content:center;
+  padding:80px 60px 80px 80px;
+  position:relative; z-index:2;
+}
+.hero-tag {
+  display:inline-flex; align-items:center; gap:10px;
+  font-size:10px; font-weight:600; letter-spacing:5px; text-transform:uppercase;
+  color:var(--red); margin-bottom:28px;
+}
+.hero-tag::before { content:''; width:32px; height:1px; background:var(--red); }
+.hero-title {
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(80px,10vw,140px);
+  line-height:.88; letter-spacing:2px;
+  margin-bottom:30px;
+}
+.hero-title em {
+  font-family:'DM Serif Display',serif;
+  font-style:italic; color:var(--red);
+  display:block;
+}
+.hero-desc {
+  font-size:16px; font-weight:300; color:rgba(245,245,240,.5);
+  line-height:1.8; max-width:420px; margin-bottom:44px;
+}
+.hero-price {
+  display:flex; align-items:baseline; gap:16px; margin-bottom:36px;
+}
+.hero-price .price {
+  font-family:'Bebas Neue',sans-serif;
+  font-size:56px; color:var(--white); letter-spacing:2px;
+}
+.hero-price .old {
+  font-size:20px; color:var(--gray); text-decoration:line-through;
+}
+.hero-price .badge {
+  font-size:10px; font-weight:700; letter-spacing:2px; text-transform:uppercase;
+  background:var(--red); color:#fff; padding:4px 10px;
+}
+.hero-actions { display:flex; gap:14px; }
+.btn-buy {
+  padding:16px 48px; background:var(--red); color:#fff; border:none; cursor:none;
+  font-family:'Bebas Neue',sans-serif; font-size:18px; letter-spacing:4px;
+  clip-path:polygon(0 0,calc(100% - 12px) 0,100% 12px,100% 100%,12px 100%,0 calc(100% - 12px));
+  transition:filter .2s, transform .2s;
+}
+.btn-buy:hover { filter:brightness(1.15); transform:translateY(-2px); }
+.btn-wish {
+  padding:14px 28px; background:transparent; color:var(--white); cursor:none;
+  border:1px solid rgba(245,245,240,.2);
+  font-size:11px; font-weight:600; letter-spacing:3px; text-transform:uppercase;
+  transition:border-color .2s, background .2s;
+}
+.btn-wish:hover { border-color:var(--white); background:rgba(255,255,255,.05); }
+
+.hero-right {
+  position:relative; overflow:hidden;
+  background:linear-gradient(135deg, #111 0%, #1a0a0a 100%);
+}
+.hero-right::before {
+  content:''; position:absolute; inset:0;
+  background:radial-gradient(ellipse 70% 60% at 60% 50%, rgba(232,0,45,.12) 0%, transparent 70%);
+}
+.hero-shoe-wrap {
+  position:absolute; inset:0;
+  display:flex; align-items:center; justify-content:center;
+}
+.hero-shoe {
+  width:90%; max-width:600px;
+  animation:float 5s ease-in-out infinite;
+  filter:drop-shadow(0 40px 80px rgba(232,0,45,.25));
+}
+@keyframes float { 0%,100%{transform:translateY(0) rotate(-3deg)} 50%{transform:translateY(-20px) rotate(-1deg)} }
+.hero-bg-text {
+  position:absolute; bottom:-20px; left:0; right:0;
+  font-family:'Bebas Neue',sans-serif; font-size:220px; letter-spacing:-5px;
+  color:rgba(255,255,255,.03); white-space:nowrap; pointer-events:none;
+  overflow:hidden;
+}
+.scroll-indicator {
+  position:absolute; bottom:40px; left:80px; z-index:2;
+  display:flex; align-items:center; gap:12px;
+  font-size:10px; letter-spacing:4px; text-transform:uppercase; color:var(--gray);
+}
+.scroll-indicator::after {
+  content:''; width:60px; height:1px;
+  background:linear-gradient(to right, var(--red), transparent);
+  animation:line 2s ease-in-out infinite;
+}
+@keyframes line { 0%,100%{opacity:1} 50%{opacity:.3} }
+
+/* ── STATS ── */
+.stats {
+  display:grid; grid-template-columns:repeat(4,1fr);
+  border-top:1px solid rgba(255,255,255,.06);
+  border-bottom:1px solid rgba(255,255,255,.06);
+}
+.stat-item {
+  padding:40px 30px; text-align:center;
+  border-right:1px solid rgba(255,255,255,.06);
+  transition:background .3s;
+}
+.stat-item:last-child { border-right:none; }
+.stat-item:hover { background:rgba(255,255,255,.02); }
+.stat-n { font-family:'Bebas Neue',sans-serif; font-size:52px; color:var(--red); letter-spacing:2px; }
+.stat-l { font-size:10px; letter-spacing:3px; text-transform:uppercase; color:var(--gray); margin-top:4px; }
+
+/* ── VÍDEO ── */
+.video-sec {
+  padding:100px 80px;
+  background:var(--dark);
+  position:relative; overflow:hidden;
+}
+.video-sec::before {
+  content:''; position:absolute; inset:0;
+  background:radial-gradient(ellipse 50% 60% at 50% 50%, rgba(232,0,45,.06) 0%, transparent 70%);
+}
+.sec-label { font-size:10px; font-weight:600; letter-spacing:5px; text-transform:uppercase; color:var(--red); margin-bottom:14px; display:flex; align-items:center; gap:10px; }
+.sec-label::before { content:''; width:28px; height:1px; background:var(--red); }
+.sec-title { font-family:'Bebas Neue',sans-serif; font-size:clamp(48px,6vw,90px); line-height:.9; margin-bottom:50px; }
+.sec-title span { color:var(--red); }
+.video-container {
+  position:relative; max-width:1000px; margin:0 auto;
+  aspect-ratio:16/9;
+}
+.video-container::before {
+  content:''; position:absolute; inset:-3px; z-index:-1;
+  background:linear-gradient(135deg, var(--red), transparent, var(--red));
+  opacity:.4;
+}
+.video-container iframe {
+  width:100%; height:100%; border:none; display:block;
+}
+.video-caption {
+  text-align:center; margin-top:22px;
+  font-size:11px; letter-spacing:3px; text-transform:uppercase; color:var(--gray);
+}
+.video-caption strong { color:var(--red); }
+
+/* ── PRODUTOS ── */
+.produtos { padding:100px 80px; background:var(--black); }
+.sec-header { display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:60px; }
+.ver-todos { font-size:11px; font-weight:600; letter-spacing:3px; text-transform:uppercase; color:var(--gray); border-bottom:1px solid var(--gray); padding-bottom:2px; transition:color .2s, border-color .2s; }
+.ver-todos:hover { color:var(--red); border-color:var(--red); }
+.prod-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:3px; }
+.prod-card {
+  background:var(--card); overflow:hidden; cursor:none;
+  position:relative; transition:transform .3s;
+}
+.prod-card:hover { transform:translateY(-8px); z-index:2; }
+.prod-img {
+  position:relative; overflow:hidden; aspect-ratio:4/3;
+  background:linear-gradient(135deg, #1a1a1a, #0f0f0f);
+  display:flex; align-items:center; justify-content:center;
+}
+.prod-img img { width:85%; transition:transform .6s; filter:drop-shadow(0 20px 40px rgba(0,0,0,.5)); }
+.prod-card:hover .prod-img img { transform:scale(1.08) rotate(3deg); }
+.prod-badge {
+  position:absolute; top:14px; left:14px;
+  font-size:9px; font-weight:700; letter-spacing:2px; text-transform:uppercase;
+  padding:4px 12px;
+}
+.badge-new { background:var(--red); color:#fff; }
+.badge-hot { background:var(--white); color:#000; }
+.badge-sale { background:#ffb800; color:#000; }
+.prod-quick {
+  position:absolute; bottom:0; left:0; right:0;
+  background:var(--red); padding:14px;
+  text-align:center; font-family:'Bebas Neue',sans-serif;
+  font-size:16px; letter-spacing:3px; color:#fff;
+  transform:translateY(100%); transition:transform .3s;
+}
+.prod-card:hover .prod-quick { transform:translateY(0); }
+.prod-info { padding:22px 24px 26px; }
+.prod-brand { font-size:9px; letter-spacing:4px; text-transform:uppercase; color:var(--red); font-weight:600; margin-bottom:6px; }
+.prod-name { font-family:'Bebas Neue',sans-serif; font-size:22px; letter-spacing:1px; margin-bottom:10px; }
+.prod-desc { font-size:12px; color:var(--gray); line-height:1.6; margin-bottom:16px; }
+.prod-footer { display:flex; justify-content:space-between; align-items:center; }
+.prod-price { font-family:'Bebas Neue',sans-serif; font-size:28px; color:var(--red); letter-spacing:1px; }
+.prod-sizes { display:flex; gap:6px; }
+.size { font-size:9px; font-weight:600; border:1px solid rgba(255,255,255,.15); padding:3px 7px; color:var(--gray); transition:all .2s; cursor:none; }
+.size:hover { border-color:var(--red); color:var(--red); }
+
+/* ── FEATURES ── */
+.features { background:var(--dark); padding:100px 80px; }
+.feat-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:3px; margin-top:60px; }
+.feat-item {
+  background:var(--black); padding:40px 32px;
+  position:relative; overflow:hidden;
+  transition:background .3s, transform .3s;
+}
+.feat-item:hover { background:#111; transform:translateY(-4px); }
+.feat-item::after {
+  content:''; position:absolute; bottom:0; left:0; right:0; height:2px;
+  background:var(--red); transform:scaleX(0); transition:transform .4s;
+}
+.feat-item:hover::after { transform:scaleX(1); }
+.feat-icon { font-size:36px; margin-bottom:18px; }
+.feat-title { font-family:'Bebas Neue',sans-serif; font-size:22px; letter-spacing:1px; margin-bottom:10px; }
+.feat-body { font-size:13px; color:var(--gray); line-height:1.7; font-weight:300; }
+
+/* ── DESTAQUE ── */
+.destaque {
+  display:grid; grid-template-columns:1fr 1fr;
+  min-height:560px; overflow:hidden;
+}
+.dest-img {
+  background:url('https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=800&q=80&auto=format&fit=crop') center/cover no-repeat;
+  position:relative;
+}
+.dest-img::after {
+  content:''; position:absolute; inset:0;
+  background:linear-gradient(to right, transparent 60%, var(--black));
+}
+.dest-content {
+  background:var(--black); padding:80px 70px;
+  display:flex; flex-direction:column; justify-content:center;
+}
+.dest-tag { font-size:10px; font-weight:600; letter-spacing:5px; text-transform:uppercase; color:var(--red); margin-bottom:20px; }
+.dest-title { font-family:'Bebas Neue',sans-serif; font-size:clamp(56px,6vw,88px); line-height:.9; margin-bottom:24px; }
+.dest-title span { color:var(--red); }
+.dest-body { font-size:16px; font-weight:300; color:rgba(245,245,240,.5); line-height:1.8; max-width:380px; margin-bottom:40px; }
+.dest-price { font-family:'Bebas Neue',sans-serif; font-size:60px; color:var(--red); margin-bottom:30px; }
+
+/* ── CTA ── */
+.cta {
+  padding:90px 80px; background:var(--red);
+  text-align:center; position:relative; overflow:hidden;
+}
+.cta::before {
+  content:'PUMA'; position:absolute; top:50%; left:50%;
+  transform:translate(-50%,-50%);
+  font-family:'Bebas Neue',sans-serif; font-size:300px; font-weight:900;
+  color:rgba(0,0,0,.08); white-space:nowrap; pointer-events:none; letter-spacing:-10px;
+}
+.cta-title { font-family:'Bebas Neue',sans-serif; font-size:clamp(56px,8vw,110px); color:#000; line-height:.9; margin-bottom:18px; }
+.cta-sub { font-size:17px; font-weight:300; color:rgba(0,0,0,.6); margin-bottom:40px; }
+.cta-form { display:flex; max-width:480px; margin:0 auto; }
+.cta-input { flex:1; background:rgba(0,0,0,.15); border:none; border-bottom:2px solid rgba(0,0,0,.3); color:#000; padding:16px 20px; font-family:'DM Sans',sans-serif; font-size:15px; outline:none; }
+.cta-input::placeholder { color:rgba(0,0,0,.45); }
+.cta-btn { padding:16px 28px; background:#000; color:var(--red); border:none; cursor:none; font-family:'Bebas Neue',sans-serif; font-size:16px; letter-spacing:3px; white-space:nowrap; transition:background .2s; }
+.cta-btn:hover { background:#1a1a1a; }
+
+/* ── FOOTER ── */
+footer { background:#060606; padding:70px 80px 28px; border-top:1px solid rgba(255,255,255,.06); }
+.ft { display:grid; grid-template-columns:2fr 1fr 1fr 1fr; gap:60px; margin-bottom:50px; }
+.ft-logo { font-family:'Bebas Neue',sans-serif; font-size:28px; letter-spacing:5px; margin-bottom:16px; }
+.ft-logo span { color:var(--red); }
+.ft-desc { font-size:13px; color:var(--gray); line-height:1.8; max-width:220px; font-weight:300; }
+.ft-ht { font-size:10px; letter-spacing:4px; text-transform:uppercase; color:var(--red); font-weight:600; margin-bottom:18px; }
+.ft-links li { margin-bottom:10px; }
+.ft-links a { font-size:13px; color:var(--gray); transition:color .2s, padding-left .2s; }
+.ft-links a:hover { color:var(--white); padding-left:6px; }
+.ft-bot { border-top:1px solid rgba(255,255,255,.06); padding-top:26px; display:flex; justify-content:space-between; font-size:12px; color:var(--gray); }
+
+/* MODAL */
+.modal { display:none; position:fixed; inset:0; background:rgba(10,10,10,.96); z-index:9000; align-items:center; justify-content:center; backdrop-filter:blur(12px); }
+.modal.on { display:flex; }
+.modal-box { background:var(--card); padding:50px 60px; text-align:center; max-width:420px; border-top:3px solid var(--red); animation:pop .3s cubic-bezier(.34,1.56,.64,1); }
+@keyframes pop { from{transform:scale(.8);opacity:0} to{transform:scale(1);opacity:1} }
+.modal-ico { font-size:48px; margin-bottom:16px; }
+.modal-t { font-family:'Bebas Neue',sans-serif; font-size:36px; color:var(--red); letter-spacing:2px; margin-bottom:10px; }
+.modal-p { color:var(--gray); font-size:14px; line-height:1.6; margin-bottom:26px; }
+.modal-close { background:var(--red); color:#fff; border:none; padding:13px 32px; font-family:'Bebas Neue',sans-serif; font-size:16px; letter-spacing:3px; cursor:none; transition:filter .2s; }
+.modal-close:hover { filter:brightness(1.2); }
+
+/* TOAST */
+.toast { position:fixed; bottom:34px; right:34px; z-index:9001; background:var(--red); color:#fff; padding:13px 26px; font-size:12px; font-weight:600; letter-spacing:2px; text-transform:uppercase; pointer-events:none; opacity:0; transform:translateY(16px); transition:opacity .4s, transform .4s; clip-path:polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,8px 100%,0 calc(100% - 8px)); }
+.toast.on { opacity:1; transform:translateY(0); }
+
+@media(max-width:900px){
+  header{padding:0 20px;}nav{display:none;}
+  .hero{grid-template-columns:1fr;}.hero-right{min-height:360px;}
+  .hero-left{padding:60px 24px;}
+  .stats{grid-template-columns:1fr 1fr;}
+  .video-sec,.produtos,.features,.destaque,.cta{padding:60px 20px;}
+  .prod-grid{grid-template-columns:1fr 1fr;}
+  .feat-grid{grid-template-columns:1fr 1fr;}
+  .destaque{grid-template-columns:1fr;}
+  .dest-img{min-height:280px;}
+  .dest-content{padding:50px 24px;}
+  .cta-form{flex-direction:column;}
+  footer{padding:50px 20px 20px;}.ft{grid-template-columns:1fr 1fr;gap:36px;}
+}
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- HEADER -->
+<header>
+  <div class="logo">STR<span>I</span>DE</div>
+  <nav>
+    <a href="#produtos">Coleção</a>
+    <a href="#video">Lookbook</a>
+    <a href="#diferenciais">Sobre</a>
+    <a href="#contato">Contato</a>
+  </nav>
+  <button class="cart-btn" onclick="toast('🛒 Carrinho aberto!')">🛒 Carrinho (0)</button>
+</header>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="hero-left">
+    <p class="hero-tag">Nova Coleção 2025</p>
+    <h1 class="hero-title">
+      CORRA<br>
+      MAIS<br>
+      <em>Longe.</em>
+    </h1>
+    <p class="hero-desc">Tênis Puma projetados para quem não para. Tecnologia de ponta, design que domina as ruas e conforto que desafia qualquer limite.</p>
+    <div class="hero-price">
+      <span class="price">R$ 599</span>
+      <span class="old">R$ 899</span>
+      <span class="badge">-33%</span>
+    </div>
+    <div class="hero-actions">
+      <button class="btn-buy" onclick="comprar('Puma Nitro Elite')">Comprar Agora</button>
+      <button class="btn-wish" onclick="toast('❤️ Adicionado aos favoritos!')">♡ Favoritar</button>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="hero-bg-text">PUMA</div>
+    <div class="hero-shoe-wrap">
+      <img class="hero-shoe" src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=700&q=80&auto=format&fit=crop&crop=center" alt="Puma Nitro Elite">
+    </div>
+  </div>
+  <span class="scroll-indicator">scroll</span>
+</section>
+
+<!-- STATS -->
+<div class="stats">
+  <div class="stat-item"><p class="stat-n">75+</p><p class="stat-l">Modelos Exclusivos</p></div>
+  <div class="stat-item"><p class="stat-n">12k</p><p class="stat-l">Clientes Satisfeitos</p></div>
+  <div class="stat-item"><p class="stat-n">48h</p><p class="stat-l">Entrega Expressa</p></div>
+  <div class="stat-item"><p class="stat-n">30d</p><p class="stat-l">Troca Garantida</p></div>
+</div>
+
+<!-- VÍDEO -->
+<section class="video-sec" id="video">
+  <p class="sec-label">Lookbook</p>
+  <h2 class="sec-title">Sinta o<br><span>Movimento.</span></h2>
+  <div class="video-container">
+    <iframe
+      src="https://www.youtube.com/embed/Bcpu-jqAL6w"
+      title="Puma — Feel The Sport"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+      allowfullscreen>
+    </iframe>
+  </div>
+  <p class="video-caption">STRIDE × <strong>PUMA</strong> · Coleção 2025</p>
+</section>
+
+<!-- PRODUTOS -->
+<section class="produtos" id="produtos">
+  <div class="sec-header">
+    <div>
+      <p class="sec-label">Coleção</p>
+      <h2 class="sec-title">Nossos<br><span>Tênis</span></h2>
+    </div>
+    <a href="#" class="ver-todos">Ver Todos →</a>
+  </div>
+  <ul class="prod-grid">
+
+    <li class="prod-card">
+      <div class="prod-img">
+        <span class="prod-badge badge-new">Novo</span>
+        <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=500&q=80&auto=format&fit=crop" alt="Puma Nitro Elite">
+        <div class="prod-quick" onclick="comprar('Puma Nitro Elite')">Adicionar ao Carrinho</div>
+      </div>
+      <div class="prod-info">
+        <p class="prod-brand">Puma Running</p>
+        <h3 class="prod-name">Nitro Elite 2</h3>
+        <p class="prod-desc">Placa de carbono, amortecimento Nitro Foam. Para quem leva a corrida a sério.</p>
+        <div class="prod-footer">
+          <span class="prod-price">R$ 899</span>
+          <div class="prod-sizes">
+            <span class="size">38</span>
+            <span class="size">39</span>
+            <span class="size">40</span>
+            <span class="size">41</span>
+          </div>
+        </div>
+      </div>
+    </li>
+
+    <li class="prod-card">
+      <div class="prod-img">
+        <span class="prod-badge badge-hot">🔥 Top</span>
+        <img src="https://images.unsplash.com/photo-1608231387042-66d1773070a5?w=500&q=80&auto=format&fit=crop" alt="Puma Suede Classic">
+        <div class="prod-quick" onclick="comprar('Puma Suede Classic')">Adicionar ao Carrinho</div>
+      </div>
+      <div class="prod-info">
+        <p class="prod-brand">Puma Originals</p>
+        <h3 class="prod-name">Suede Classic XXI</h3>
+        <p class="prod-desc">Ícone das ruas desde 1968. Cabedal em camurça, sola de borracha vulcanizada.</p>
+        <div class="prod-footer">
+          <span class="prod-price">R$ 499</span>
+          <div class="prod-sizes">
+            <span class="size">39</span>
+            <span class="size">40</span>
+            <span class="size">42</span>
+            <span class="size">43</span>
+          </div>
+        </div>
+      </div>
+    </li>
+
+    <li class="prod-card">
+      <div class="prod-img">
+        <span class="prod-badge badge-sale">-25%</span>
+        <img src="https://images.unsplash.com/photo-1600185365483-26d7a4cc7519?w=500&q=80&auto=format&fit=crop" alt="Puma RS-X">
+        <div class="prod-quick" onclick="comprar('Puma RS-X Efekt')">Adicionar ao Carrinho</div>
+      </div>
+      <div class="prod-info">
+        <p class="prod-brand">Puma Sport Style</p>
+        <h3 class="prod-name">RS-X Efekt</h3>
+        <p class="prod-desc">Tecnologia Running System reinventada. Chunky, ousado e com amortecimento superior.</p>
+        <div class="prod-footer">
+          <span class="prod-price">R$ 599</span>
+          <div class="prod-sizes">
+            <span class="size">38</span>
+            <span class="size">40</span>
+            <span class="size">41</span>
+            <span class="size">44</span>
+          </div>
+        </div>
+      </div>
+    </li>
+
+    <li class="prod-card">
+      <div class="prod-img">
+        <img src="https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?w=500&q=80&auto=format&fit=crop" alt="Puma Deviate">
+        <div class="prod-quick" onclick="comprar('Puma Deviate Nitro')">Adicionar ao Carrinho</div>
+      </div>
+      <div class="prod-info">
+        <p class="prod-brand">Puma Running</p>
+        <h3 class="prod-name">Deviate Nitro 2</h3>
+        <p class="prod-desc">Estabilidade e velocidade em equilíbrio perfeito. Para treinos longos e intensos.</p>
+        <div class="prod-footer">
+          <span class="prod-price">R$ 749</span>
+          <div class="prod-sizes">
+            <span class="size">39</span>
+            <span class="size">41</span>
+            <span class="size">42</span>
+            <span class="size">43</span>
+          </div>
+        </div>
+      </div>
+    </li>
+
+    <li class="prod-card">
+      <div class="prod-img">
+        <span class="prod-badge badge-new">Novo</span>
+        <img src="https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=500&q=80&auto=format&fit=crop" alt="Puma Velocity Nitro">
+        <div class="prod-quick" onclick="comprar('Puma Velocity Nitro')">Adicionar ao Carrinho</div>
+      </div>
+      <div class="prod-info">
+        <p class="prod-brand">Puma Running</p>
+        <h3 class="prod-name">Velocity Nitro 3</h3>
+        <p class="prod-desc">Leve como o vento. Foam Nitro de última geração para máximo retorno de energia.</p>
+        <div class="prod-footer">
+          <span class="prod-price">R$ 679</span>
+          <div class="prod-sizes">
+            <span class="size">38</span>
+            <span class="size">39</span>
+            <span class="size">40</span>
+            <span class="size">42</span>
+          </div>
+        </div>
+      </div>
+    </li>
+
+    <li class="prod-card">
+      <div class="prod-img">
+        <span class="prod-badge badge-hot">Exclusivo</span>
+        <img src="https://images.unsplash.com/photo-1584735175315-9d5df23860e6?w=500&q=80&auto=format&fit=crop" alt="Puma Clyde">
+        <div class="prod-quick" onclick="comprar('Puma Clyde All-Pro')">Adicionar ao Carrinho</div>
+      </div>
+      <div class="prod-info">
+        <p class="prod-brand">Puma Basketball</p>
+        <h3 class="prod-name">Clyde All-Pro</h3>
+        <p class="prod-desc">Do court para as ruas. Herança do basquete com estética streetwear premium.</p>
+        <div class="prod-footer">
+          <span class="prod-price">R$ 829</span>
+          <div class="prod-sizes">
+            <span class="size">40</span>
+            <span class="size">41</span>
+            <span class="size">42</span>
+            <span class="size">44</span>
+          </div>
+        </div>
+      </div>
+    </li>
+
+  </ul>
+</section>
+
+<!-- FEATURES -->
+<section class="features" id="diferenciais">
+  <p class="sec-label">Por que STRIDE</p>
+  <h2 class="sec-title">Nossa<br><span>Proposta</span></h2>
+  <div class="feat-grid">
+    <div class="feat-item">
+      <div class="feat-icon">🚀</div>
+      <h3 class="feat-title">Entrega Expressa</h3>
+      <p class="feat-body">Receba em até 48h nas capitais. Rastreamento em tempo real pelo app.</p>
+    </div>
+    <div class="feat-item">
+      <div class="feat-icon">✅</div>
+      <h3 class="feat-title">100% Original</h3>
+      <p class="feat-body">Revendedor oficial Puma. Nota fiscal, garantia de fábrica e certificado de autenticidade.</p>
+    </div>
+    <div class="feat-item">
+      <div class="feat-icon">🔄</div>
+      <h3 class="feat-title">Troca Fácil</h3>
+      <p class="feat-body">Não serviu? Troca em até 30 dias sem burocracia. Frete de devolução por nossa conta.</p>
+    </div>
+    <div class="feat-item">
+      <div class="feat-icon">💳</div>
+      <h3 class="feat-title">Parcelamento</h3>
+      <p class="feat-body">Em até 12x sem juros no cartão. Pix com 5% de desconto adicional.</p>
+    </div>
+  </div>
+</section>
+
+<!-- DESTAQUE -->
+<section class="destaque">
+  <div class="dest-img"></div>
+  <div class="dest-content">
+    <p class="dest-tag">Destaque da Semana</p>
+    <h2 class="dest-title">PUMA<br>SUEDE<br><span>CLASSIC</span></h2>
+    <p class="dest-body">O tênis que definiu gerações. Mais de 55 anos de história nas ruas do mundo. Agora com novos colorways exclusivos para 2025.</p>
+    <p class="dest-price">R$ 499</p>
+    <button class="btn-buy" onclick="comprar('Puma Suede Classic')">Comprar Agora</button>
+  </div>
+</section>
+
+<!-- CTA -->
+<div class="cta" id="contato">
+  <h2 class="cta-title">10% OFF<br>na Primeira Compra</h2>
+  <p class="cta-sub">Cadastre seu e-mail e ganhe desconto imediato + novidades em primeira mão.</p>
+  <div class="cta-form">
+    <input type="email" class="cta-input" placeholder="seu@email.com">
+    <button class="cta-btn" onclick="signUp()">Quero Desconto →</button>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="ft">
+    <div>
+      <p class="ft-logo">STR<span>I</span>DE</p>
+      <p class="ft-desc">Revendedor oficial Puma. Tênis originais com entrega rápida e troca garantida.</p>
+    </div>
+    <div>
+      <p class="ft-ht">Coleção</p>
+      <ul class="ft-links">
+        <li><a href="#">Running</a></li>
+        <li><a href="#">Originals</a></li>
+        <li><a href="#">Sport Style</a></li>
+        <li><a href="#">Basketball</a></li>
+      </ul>
+    </div>
+    <div>
+      <p class="ft-ht">Ajuda</p>
+      <ul class="ft-links">
+        <li><a href="#">Rastrear Pedido</a></li>
+        <li><a href="#">Trocas e Devoluções</a></li>
+        <li><a href="#">Guia de Tamanhos</a></li>
+        <li><a href="#">FAQ</a></li>
+      </ul>
+    </div>
+    <div>
+      <p class="ft-ht">Contato</p>
+      <ul class="ft-links">
+        <li><a href="#">WhatsApp</a></li>
+        <li><a href="#">Instagram</a></li>
+        <li><a href="#">E-mail</a></li>
+        <li><a href="#">Lojas Físicas</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="ft-bot">
+    <span>© 2025 STRIDE. Revendedor Oficial Puma.</span>
+    <span>Privacidade · Termos · #RunWithPuma 👟</span>
+  </div>
+</footer>
+
+<!-- MODAL -->
+<div class="modal" id="modal">
+  <div class="modal-box">
+    <div class="modal-ico">👟</div>
+    <h3 class="modal-t" id="modal-t">Adicionado!</h3>
+    <p class="modal-p" id="modal-msg">Produto adicionado ao carrinho com sucesso.</p>
+    <button class="modal-close" onclick="closeModal()">Continuar Comprando</button>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+// Custom cursor
+const cursor = document.getElementById('cursor');
+const ring = document.getElementById('cursorRing');
+document.addEventListener('mousemove', e => {
+  cursor.style.left = e.clientX + 'px';
+  cursor.style.top = e.clientY + 'px';
+  ring.style.left = e.clientX + 'px';
+  ring.style.top = e.clientY + 'px';
+});
+document.querySelectorAll('button,a,.prod-card,.size').forEach(el => {
+  el.addEventListener('mouseenter', () => { ring.style.transform = 'translate(-50%,-50%) scale(1.8)'; ring.style.borderColor = 'rgba(232,0,45,.7)'; });
+  el.addEventListener('mouseleave', () => { ring.style.transform = 'translate(-50%,-50%) scale(1)'; ring.style.borderColor = 'rgba(232,0,45,.4)'; });
+});
+
+// Scroll header
+window.addEventListener('scroll', () => {
+  document.querySelector('header').style.background =
+    window.scrollY > 60 ? 'rgba(10,10,10,1)' : 'rgba(10,10,10,.92)';
+});
+
+// Smooth scroll
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    const t = document.querySelector(a.getAttribute('href'));
+    if (t) { e.preventDefault(); t.scrollIntoView({ behavior: 'smooth' }); }
+  });
+});
+
+function comprar(nome) {
+  document.getElementById('modal-t').textContent = 'Adicionado! 👟';
+  document.getElementById('modal-msg').textContent = `"${nome}" foi adicionado ao seu carrinho. Finalize a compra para garantir!`;
+  document.getElementById('modal').classList.add('on');
+}
+function closeModal() { document.getElementById('modal').classList.remove('on'); }
+document.getElementById('modal').addEventListener('click', e => { if (e.target === e.currentTarget) closeModal(); });
+
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('on');
+  setTimeout(() => t.classList.remove('on'), 2800);
+}
+
+function signUp() {
+  const inp = document.querySelector('.cta-input');
+  if (!inp.value || !inp.value.includes('@')) { inp.style.borderBottom = '2px solid #c00'; return; }
+  inp.style.borderBottom = '';
+  toast('🎉 Cupom de 10% enviado pro seu e-mail!');
+  inp.value = '';
+}
+</script>
+</body>
+</html>
